@@ -1,10 +1,10 @@
 # hyprfreeze
-Simple bash script to pause a game process in Hyprland, allowing you to resume it later.
+Simple bash script to "freeze" a game process in Hyprland, allowing you to resume it later.
 Useful to:
-- Pause games during unskippable cutscenes and similar scenarios
+- Pause games during unpausable cutscenes
 - Save system resources (CPU and GPU are free, the process is saved in RAM)
 
-(Also works for any other program; pauses the current active window)
+(Also works for any other program; freezes the current active window)
 ### Usage
 Make the script executable and add a bind in your Hyprland config:
 ```
