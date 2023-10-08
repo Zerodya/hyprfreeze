@@ -6,7 +6,10 @@ Useful to:
 
 (Also works for any other program; pauses the current active window)
 ### Usage
-Make the script executable, then in your Hyprland config add a bind to the script e.g. :
+Make the script executable and add a bind in your Hyprland config:
 ```
 bind = $mainMod, PAUSE, exec, ~/scripts/hyprfreeze
 ```
+### Known issues
+- Mouse input doesn't work inside Xorg/XWayland windows while a Wine/Proton game is paused
+  - Workaround: Run the game in gamescope
