@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PID=$(hyprctl activewindow | grep -i pid | awk -F "pid: " '{ print $2 }' | awk -F "," '{ print $1 }')
 PIDS=$(pstree $PID -npl | grep -oP '(?<=\()[0-9]+(?=\))')
