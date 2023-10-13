@@ -1,16 +1,171 @@
 #!/usr/bin/env bash
 
-PID=$(hyprctl activewindow | grep -i pid | awk -F "pid: " '{ print $2 }' | awk -F "," '{ print $1 }')
-PIDS=$(pstree $PID -npl | grep -oP '(?<=\()[0-9]+(?=\))')
+function printHelp() {
+  cat <<EOF
+Usage: hyprfreeze (-a | -p [pid] | -n [name] | -r) [--info --dry-run]
 
-# Pause process if running
-if [[ "$(ps -o state= $PID)" == S ]]; then
-    kill -STOP $PIDS
-	exit 0
-fi
+Hyprfreeze is an utility to suspend a game process (and other programs) in Hyprland.
 
-# Resume process if stopped
-if [[ "$(ps -o state= $PID)" == T ]]; then
-	kill -CONT $PIDS
-	exit 0
-fi
+Options:
+  -h, --help		show help message
+  -a, --active		pause/resume active window
+  -p, --pid		pause/resume by process id
+  -n, --name		pause/resume by process name/command
+  -r, --prop		pause/resume by clicking on window
+  --info		show information about the process
+  --dry-run		doesn't actually pause/resume a process, useful with --info
+EOF
+}
+
+function hyprfreeze() {
+	# Skip this function if --dry-run flag was provided
+	if [[ $DRYRUN == "1" ]]; then return 0; fi
+
+	# Get pids of process tree
+	PIDS=$(pstree -p $PID | grep -oP '\(\K[^\)]+')
+
+	# Pause or resume processes
+	if [[ "$(ps -o state= $PID)" == T ]]; then
+		kill -CONT $PIDS 2>/dev/null && 
+		echo "Resumed $(ps -p $PID -o comm= 2>/dev/null) ($PID)" || exit 1
+	else
+	    kill -STOP $PIDS 2>/dev/null && 
+	    echo "Stopped $(ps -p $PID -o comm= 2>/dev/null) ($PID)" || exit 1
+	fi
+}
+
+function freezeActive() {
+	PID=$(hyprctl activewindow -j | jq '.pid')
+
+	# Prevent pausing itself
+	script_pid=$$
+	if echo "$(pstree -p $PID | grep -oP '\(\K[^\)]+')" | grep -q "$script_pid"; then
+		echo "You are trying to suspend the hyprfreeze process."
+		echo "This option is meant to be used via keybind to pause the active window, running it in terminal would suspend hyprfreeze itself."
+		exit 1
+	fi
+
+	hyprfreeze
+}
+
+function freezePid() {
+	# Check if process pid exists
+	if ! ps -p $1 &>/dev/null; then
+	    echo "Process ID $1 not found"
+	    exit 1
+	fi
+
+	PID=$1
+	hyprfreeze
+}
+
+function freezeName() {
+	# Check if process name exists
+	if ! pidof -x "$1" >/dev/null; then
+		echo "Process name $1 not found"
+		exit 1
+	fi
+	
+	# Get last process if there are multiple
+	PID=$(pidof $1 | awk '{print $NF}')
+	hyprfreeze
+}
+
+function freezeProp() {
+	PID=$(hyprprop | jq '.pid')
+	hyprfreeze
+}
+
+function info() {
+	echo -e "$(tput bold)Process tree:$(tput sgr0)"
+	ps -p $PID 2>/dev/null && pstree -p $PID
+
+	echo -e "\n$(tput bold)Process threads:$(tput sgr0)"
+	ps -eLo pid,tid,comm | grep $PID 2>/dev/null
+
+	echo -e "\n$(tput bold)Process ID$(tput sgr0) = $PID \
+	\n$(tput bold)Process name$(tput sgr0) = $(ps -p $PID -o comm= 2>/dev/null) \
+	\n$(tput bold)Process state$(tput sgr0) = $(ps -o state= -p $PID 2>/dev/null)"
+}
+
+function args() {
+	# Check if no options were passed
+	if [ -z "$1" ]; then
+    	printHelp
+    	exit 1
+	fi
+
+	 # Track valid flags
+    local valid_flag_count=0 
+
+	# Parse options
+	local options="hap:n:r"
+    local long_options="help,active,pid:,name:,prop,info,dry-run"  
+    local parsed_args=$(getopt -o $options --long $long_options -n "$(basename "$0")" -- "$@")
+    eval set -- "$parsed_args"
+	while true; do
+	    case $1 in
+	        -h|--help)
+	        	printHelp
+	        	exit 0
+				;;
+			-a|--active)
+				((valid_flag_count++))
+				FLAG_ACTIVE=true
+				;;
+			-p|--pid)
+				((valid_flag_count++))
+				shift;
+				FLAG_PID="$1"
+				;;
+			-n|--name)
+				((valid_flag_count++))
+				shift;
+				NAME_FLAG="$1"
+				;;
+			-r|--prop)
+				((valid_flag_count++))
+				FLAG_PROP=true
+				;;
+            --info)
+                INFO=1
+                ;;
+            --dry-run)
+                DRYRUN=1
+                ;;
+			--)
+                shift; # Skip -- argument
+                COMMAND=${@:2}
+                break;;
+	        *)
+				exit 1
+				;;
+	    esac
+	    shift
+	done
+
+	# Check if more than one valid flag is provided, or if none was provided
+	if [ $valid_flag_count -ne 1 ]; then
+		printHelp
+		exit 1
+	fi
+}
+
+function main() {
+	# Handle the chosen valid flag
+	if [ "$FLAG_ACTIVE" = true ]; then freezeActive;
+	elif [ -n "$FLAG_PID" ]; then freezePid "$FLAG_PID";
+	elif [ -n "$NAME_FLAG" ]; then freezeName "$NAME_FLAG";
+	elif [ "$FLAG_PROP" = true ]; then freezeProp;
+	fi
+
+	# Run info function after PID is obtained
+    if [ $INFO -eq 1 ]; then info; fi
+}
+
+INFO=0
+DRYRUN=0
+
+args "$@"
+
+main
