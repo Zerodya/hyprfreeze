@@ -1,5 +1,5 @@
 # hyprfreeze
-Hyprfreeze is an utility to suspend a game process (and other programs) in Hyprland.
+Hyprfreeze is a utility to suspend a game process (and other programs) in Hyprland.
 
 Useful to:
 - Pause single-player games that can't be paused (like Dark Souls)
@@ -8,7 +8,7 @@ Useful to:
 
 ## Installation
 ### Arch Linux
-Coming soon<sup><sup>TM</sup></sup> in AUR.
+Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-git).
 
 ### Dependencies
 - hyprland (to get the pid of the active window with hyprctl)
@@ -35,13 +35,13 @@ bind = $mainMod, PAUSE, exec, hyprfreeze -a
 ```
 ### Available flags
 ```
--h, --help		show help message
--a, --active	pause/resume active window
--p, --pid		pause/resume by process id
--n, --name		pause/resume by process name/command
--r, --prop		pause/resume by clicking on window
---info		    show information about the process
---dry-run		doesn't actually pause/resume a process, useful with --info
+-h, --help      show help message
+-a, --active    pause/resume active window
+-p, --pid       pause/resume by process id
+-n, --name      pause/resume by process name/command
+-r, --prop      pause/resume by clicking on window
+--info          show information about the process
+--dry-run       doesn't actually pause/resume a process, useful with --info
 ```
 ### Examples:
 ```
