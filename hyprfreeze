@@ -158,20 +158,19 @@ function args() {
 }
 
 function main() {
-	# Handle the chosen required flag
+	# Get pid by a required flag
 	if [ "$FLAG_ACTIVE" = true ]; then
 		getPidByActive
-		toggleFreeze
 	elif [ -n "$FLAG_PID" ]; then
 		getPidByPid "$FLAG_PID"
-		toggleFreeze
 	elif [ -n "$NAME_FLAG" ]; then
 		getPidByName "$NAME_FLAG"
-		toggleFreeze
 	elif [ "$FLAG_PROP" = true ]; then
 		getPidByProp
-		toggleFreeze
 	fi
+
+	# Suspend or resume process
+	toggleFreeze
 
 	# Run these functions after PID is obtained
 	if [ $INFO -eq 1 ]; then printInfo; fi
