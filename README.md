@@ -31,17 +31,19 @@ Add a bind in your Hyprland config to pause the current active window:
 ...
 
 # Toggle freeze on active window
-bind = $mainMod, PAUSE, exec, hyprfreeze -a
+bind = , PAUSE, exec, hyprfreeze -a
 ```
 ### Available flags
 ```
--h, --help      show help message
--a, --active    pause/resume active window
--p, --pid       pause/resume by process id
--n, --name      pause/resume by process name/command
--r, --prop      pause/resume by clicking on window
---info          show information about the process
---dry-run       doesn't actually pause/resume a process, useful with --info
+-h, --help            show help message
+-a, --active          pause/resume active window
+-p, --pid             pause/resume by process id
+-n, --name            pause/resume by process name/command
+-r, --prop            pause/resume by clicking on window
+-s, --silent          don't send notification
+-t, --notif-timeout   notification timeout in milliseconds (default 3000)
+--info                show information about the process
+--dry-run             doesn't actually pause/resume a process, useful with --info
 ```
 ### Examples:
 ```
