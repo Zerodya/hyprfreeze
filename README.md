@@ -36,14 +36,14 @@ bind = , PAUSE, exec, hyprfreeze -a
 ### Available flags
 ```
 -h, --help            show help message
--a, --active          pause/resume active window
--p, --pid             pause/resume by process id
--n, --name            pause/resume by process name/command
--r, --prop            pause/resume by clicking on window
+-a, --active          suspend/resume active window
+-p, --pid             suspend/resume by process id
+-n, --name            suspend/resume by process name/command
+-r, --prop            suspend/resume by clicking on window
 -s, --silent          don't send notification
--t, --notif-timeout   notification timeout in milliseconds (default 3000)
+-t, --notif-timeout   notification timeout in milliseconds (default 5000)
 --info                show information about the process
---dry-run             doesn't actually pause/resume a process, useful with --info
+--dry-run             doesn't actually suspend/resume a process, useful with --info
 ```
 ### Examples:
 ```

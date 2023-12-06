@@ -13,7 +13,7 @@ Options:
   -n, --name		suspend/resume by process name/command
   -r, --prop		suspend/resume by clicking on window
   -s, --silent          don't send notification
-  -t, --notif-timeout   notification timeout in milliseconds (default 3000)
+  -t, --notif-timeout   notification timeout in milliseconds (default 5000)
   --info		show information about the process
   --dry-run		doesn't actually suspend/resume a process, useful with --info
 EOF
@@ -178,7 +178,7 @@ function main() {
 }
 
 SILENT=0
-NOTIF_TIMEOUT=3000
+NOTIF_TIMEOUT=5000
 INFO=0
 DRYRUN=0
 
