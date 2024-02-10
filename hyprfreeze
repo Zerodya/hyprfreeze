@@ -67,6 +67,11 @@ function getPidByName() {
 }
 
 function getPidByProp() {
+	if ! command -v hyprprop; then
+    echo "You need to install 'hyprprop' to use this feature. (https://github.com/vilari-mickopf/hyprprop)"
+    exit 1
+  fi
+
 	PID=$(hyprprop | jq '.pid')
 }
 
