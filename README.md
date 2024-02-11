@@ -1,12 +1,14 @@
 # hyprfreeze
 Hyprfreeze is a utility to suspend a game process (and other programs) in Hyprland.
 
-Useful to:
+https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f58d4f65926a
+
+**Useful to:**
 - Pause single-player games that can't normally be paused (Elden Ring, Baldur's Gate 3, ...)
 - Pause cutscenes to read the subtitles or if you suddenly need to leave your desk
 - Save system resources (excluding RAM) if you need them for another computer task, or if the game's pause menu uses too many
 
-Note: Running games in [gamescope](https://github.com/ValveSoftware/gamescope) is highly recommended. (See [#1](https://github.com/Zerodya/hyprfreeze/issues/1))
+**Note:** Running games in [**gamescope**](https://github.com/ValveSoftware/gamescope) is highly recommended. (See [#1](https://github.com/Zerodya/hyprfreeze/issues/1))
 
 ## Installation
 ### Arch Linux
