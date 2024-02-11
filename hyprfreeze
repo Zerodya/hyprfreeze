@@ -33,24 +33,24 @@ function toggleFreeze() {
   if [[ $DRYRUN == "1" ]]; then return 0; fi
 
   # Get pids of process tree
-  PIDS=$(pstree -p $PID | grep -oP '\(\K[^\)]+')
+  PIDS=$(pstree -p "$PID" | grep -oP '\(\K[^\)]+')
 
   debugPrint "PIDs: $PIDS"
 
   # Prevent suspending itself
   local pid_of_script=$$
-  if echo $PIDS | grep -q "$pid_of_script"; then
+  if echo "$PIDS" | grep -q "$pid_of_script"; then
     echo "You are trying to suspend the hyprfreeze process."
     exit 1
   fi
 
   # Suspend or resume processes
-  if [[ "$(ps -o state= $PID)" == T ]]; then
+  if [[ "$(ps -o state= "$PID")" == T ]]; then
     debugPrint "Resuming processes..."
-    kill -CONT $PIDS 2>/dev/null && echo "Resumed $(ps -p $PID -o comm= 2>/dev/null) (PID $PID)" || exit 1
+    kill -CONT "$PIDS" 2>/dev/null && echo "Resumed $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
   else
     debugPrint "Suspending processes..."
-    kill -STOP $PIDS 2>/dev/null && echo "Suspended $(ps -p $PID -o comm= 2>/dev/null) (PID $PID)" || exit 1
+    kill -STOP "$PIDS" 2>/dev/null && echo "Suspended $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
   fi
 }
 
@@ -63,7 +63,7 @@ function getPidByActive() {
 function getPidByPid() {
   debugPrint "Getting PID by PID: $1"
   # Check if process pid exists
-  if ! ps -p $1 &>/dev/null; then
+  if ! ps -p "$1" &>/dev/null; then
     echo "Process ID $1 not found"
     exit 1
   fi
@@ -80,7 +80,7 @@ function getPidByName() {
   fi
 
   # Get last process if there are multiple
-  PID=$(pidof $1 | awk '{print $NF}')
+  PID=$(pidof "$1" | awk '{print $NF}')
   debugPrint "PID by name: $PID"
 }
 
@@ -98,23 +98,24 @@ function getPidByProp() {
 function printInfo() {
   debugPrint "Printing process info...\n"
   echo -e "$(tput bold)Process tree:$(tput sgr0)"
-  ps -p $PID 2>/dev/null && pstree -p $PID
+  ps -p "$PID" 2>/dev/null && pstree -p "$PID"
 
   echo -e "\n$(tput bold)Process threads:$(tput sgr0)"
-  ps -eLo pid,tid,comm | grep $PID 2>/dev/null
+  ps -eLo pid,tid,comm | grep "$PID" 2>/dev/null
 
   echo -e "\n$(tput bold)Process ID$(tput sgr0) = $PID \
-    \n$(tput bold)Process name$(tput sgr0) = $(ps -p $PID -o comm= 2>/dev/null) \
-    \n$(tput bold)Process state$(tput sgr0) = $(ps -o state= -p $PID 2>/dev/null)\n"
+    \n$(tput bold)Process name$(tput sgr0) = $(ps -p "$PID" -o comm= 2>/dev/null) \
+    \n$(tput bold)Process state$(tput sgr0) = $(ps -o state= -p "$PID" 2>/dev/null)\n"
 }
 
 function sendNotification() {
   debugPrint "Sending notification..."
-  local title=$([[ "$(ps -o state= $PID)" == T ]] &&
-    echo "Suspended $(ps -p $PID -o comm= 2>/dev/null)" ||
-    echo "Resumed $(ps -p $PID -o comm= 2>/dev/null)")
+  local title
+  title=$( [[ "$(ps -p "$PID" -o state=)" == T ]] &&
+    echo "Suspended $(ps -p "$PID" -o comm= 2>/dev/null)" ||
+    echo "Resumed $(ps -p "$PID" -o comm= 2>/dev/null)")
 
-  local message=$(echo "PID $PID")
+  local message="PID $PID"
 
   notify-send "${title}" "${message}" -t "$NOTIF_TIMEOUT" -a Hyprfreeze
 }
@@ -126,7 +127,9 @@ function args() {
   # Parse options
   local options="hap:n:rst:"
   local long_options="help,active,pid:,name:,prop,silent,notif-timeout:,info,dry-run,debug"
-  local parsed_args=$(getopt -o $options --long $long_options -n "$(basename "$0")" -- "$@")
+  local parsed_args
+  parsed_args=$(getopt -o "$options" --long "$long_options" -n "$(basename "$0")" -- "$@")
+
   eval set -- "$parsed_args"
   while true; do
     case $1 in
@@ -170,7 +173,6 @@ function args() {
         ;;
       --)
         shift # Skip -- argument
-        COMMAND=${@:2}
         break
         ;;
       *)
