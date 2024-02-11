@@ -48,7 +48,7 @@ bind = , PAUSE, exec, hyprfreeze -a
 -a, --active          toggle suspend by active window
 -p, --pid             toggle suspend by process id
 -n, --name            toggle suspend by process name/command
--r, --prop            toggle suspend by clicking on window
+-r, --prop            toggle suspend by clicking on window (hyprprop must be installed)
 
 -s, --silent          don't send notification
 -t, --notif-timeout   notification timeout in milliseconds (default 5000)
