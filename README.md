@@ -1,5 +1,7 @@
 # hyprfreeze
-Hyprfreeze is a utility to suspend a game process (and other programs) in Hyprland.
+[![basher install](https://www.basher.it/assets/logo/basher_install.svg)](https://www.basher.it/package/)
+Hyprfreeze is a utility to suspend a game process (and other programs) in
+Hyprland.
 
 https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f58d4f65926a
 
@@ -22,6 +24,12 @@ Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-g
 - [`hyprprop`](https://github.com/vilari-mickopf/hyprprop) to get the pid of a window by selecting it with your mouse
   ### Highly Recommended
 - [`gamescope`](https://github.com/ValveSoftware/gamescope) fixes mouse input not working in other XWayland windows after pausing a Wine game. It's also the superior way to game in Wayland anyway.
+
+### Basher
+Hyprfreeze is compatible with shell script package manager [Basher](https://basher.it).
+```bash
+basher install Zerodya/hyprfreeze
+```
 
 ### Manual
 Clone this repo and symlink the `hyprfreeze` script to a directory in your `PATH`:
