@@ -56,7 +56,14 @@ function toggleFreeze() {
 
 function getPidByActive() {
   debugPrint "Getting PID by active window..."
-  PID=$(hyprctl activewindow -j | jq '.pid')
+  if [[ "hyprland" == "$DESKTOP" ]]; then
+    PID=$(hyprctl activewindow -j | jq '.pid')
+  elif [[ "sway" == "$DESKTOP" ]]; then
+    PID=$(swaymsg -t get_tree | jq '.. | select(.type?) | select(.focused==true) | .pid')
+  else
+    echo "Detecting the active window is currently not supported on $DESKTOP."
+    exit 1
+  fi
   debugPrint "PID by active window: $PID"
 
   # Die if PID is not numeric (e.g. "null" if there is no active window)
