@@ -58,6 +58,12 @@ function getPidByActive() {
   debugPrint "Getting PID by active window..."
   PID=$(hyprctl activewindow -j | jq '.pid')
   debugPrint "PID by active window: $PID"
+
+  # Die if PID is not numeric (e.g. "null" if there is no active window)
+  if ! [[ $PID == ?(-)+([[:digit:]]) ]]; then
+    echo "Cannot freeze window with invalid PID $PID."
+    exit 1
+  fi
 }
 
 function getPidByPid() {
