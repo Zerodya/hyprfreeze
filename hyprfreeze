@@ -101,8 +101,23 @@ function getPidByProp() {
   debugPrint "PID by prop: $PID"
 }
 
+function detectEnvironment() {
+  local Type
+  local Desktop
+  eval "$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type -p Desktop)"
+  [ -z "$Type" ] && echo "Could not determine session type via \`loginctl\`." && exit 1
+  [ -z "$Desktop" ] && echo "Could not determine desktop environment via \`loginctl\`." && exit 1
+  SESSION=$Type
+  DESKTOP=$Desktop
+}
+
 function printInfo() {
-  debugPrint "Printing process info...\n"
+  debugPrint "Printing environment info..."
+  echo -e "$(tput bold)Session type:$(tput sgr0) $SESSION"
+  echo -e "$(tput bold)Desktop:$(tput sgr0) $DESKTOP"
+  echo ""
+
+  debugPrint "Printing process info..."
   echo -e "$(tput bold)Process tree:$(tput sgr0)"
   ps -p "$PID" 2>/dev/null && pstree -p "$PID"
 
@@ -225,5 +240,7 @@ DRYRUN=0
 DEBUG=0
 
 args "$@"
+
+detectEnvironment
 
 main
