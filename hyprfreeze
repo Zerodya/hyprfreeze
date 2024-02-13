@@ -121,10 +121,20 @@ function getPidByProp() {
 }
 
 function detectEnvironment() {
-  local Desktop
-  eval "$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Desktop)"
-  [ -z "$Desktop" ] && echo "Could not determine desktop environment via \`loginctl\`. Assuming Hyprland." && Desktop="hyprland"
-  DESKTOP=$Desktop
+  if [ $(command -v loginctl) ]; then
+    local Desktop
+    eval "$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Desktop)"
+    DESKTOP=$Desktop
+  fi
+
+  if [ -z "$DESKTOP" ]; then
+    DESKTOP=$XDG_SESSION_DESKTOP
+  fi
+
+  if [ -z "$DESKTOP" ]; then
+    debugPrint "Could not determine desktop environment via \`loginctl\`, and `$XDG_DESKTOP_SESSION` is not set. Assuming Hyprland."
+    DESKTOP="hyprland"
+  fi
 }
 
 function printInfo() {

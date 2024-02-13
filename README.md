@@ -19,7 +19,6 @@ Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-g
 - a compatible window manager (`hyprland` or `sway`) to get the PID of the active window
 - `jq` to parse json
 - `psmisc` contains 'pstree' which is required to list child processes
-- Systemd for the `loginctl` utility
   ### Optional
 - [`hyprprop`](https://github.com/vilari-mickopf/hyprprop) or [`swayprop`](https://git.alternerd.tv/alterNERDtive/swayprop) to get the pid of a window by selecting it with your mouse
   ### Highly Recommended
