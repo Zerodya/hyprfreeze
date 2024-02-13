@@ -21,7 +21,7 @@ Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-g
 - `psmisc` contains 'pstree' which is required to list child processes
 - Systemd for the `loginctl` utility
   ### Optional
-- [`hyprprop`](https://github.com/vilari-mickopf/hyprprop) to get the pid of a window by selecting it with your mouse
+- [`hyprprop`](https://github.com/vilari-mickopf/hyprprop) or [`swayprop`](https://git.alternerd.tv/alterNERDtive/swayprop) to get the pid of a window by selecting it with your mouse
   ### Highly Recommended
 - [`gamescope`](https://github.com/ValveSoftware/gamescope) fixes mouse input not working in other XWayland windows after pausing a Wine game. It's also the superior way to game in Wayland anyway.
 

@@ -12,7 +12,8 @@ Options:
   -a, --active          toggle suspend by active window (supported on hyprland and sway)
   -p, --pid             toggle suspend by process id
   -n, --name            toggle suspend by process name/command
-  -r, --prop            toggle suspend by clicking on window (supported on hyprland, hyprprop must be installed)
+  -r, --prop            toggle suspend by clicking on window (supported on hyprland and sway,
+                        hyprprop/swayprop must be installed)
 
   -s, --silent          don't send notification
   -t, --notif-timeout   notification timeout in milliseconds (default 5000)
@@ -100,12 +101,19 @@ function getPidByName() {
 function getPidByProp() {
   debugPrint "Getting PID by prop..."
   if [[ "hyprland" == "$DESKTOP" ]]; then
-    if ! command -v hyprprop; then
+    if ! [ $(command -v hyprprop) ]; then
       echo "You need to install 'hyprprop' to use this feature. (https://github.com/vilari-mickopf/hyprprop)"
       exit 1
     fi
 
     PID=$(hyprprop | jq '.pid')
+  elif [[ "sway" == "$DESKTOP" ]]; then
+    if ! [ $(command -v swayprop) ]; then
+      echo "You need to install 'swayprop' to use this feature. (https://git.alternerd.tv/alterNERDtive/swayprop)"
+      exit 1
+    fi
+
+    PID=$(swayprop | jq '.pid')
   else
     echo "Selecting the target window by mouse is currently not supported on $DESKTOP."
     exit 1
