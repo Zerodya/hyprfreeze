@@ -122,12 +122,9 @@ function getPidByProp() {
 }
 
 function detectEnvironment() {
-  local Type
   local Desktop
-  eval "$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type -p Desktop)"
-  [ -z "$Type" ] && echo "Could not determine session type via \`loginctl\`." && exit 1
-  [ -z "$Desktop" ] && echo "Could not determine desktop environment via \`loginctl\`." && exit 1
-  SESSION=$Type
+  eval "$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Desktop)"
+  [ -z "$Desktop" ] && echo "Could not determine desktop environment via \`loginctl\`. Assuming Hyprland." && Desktop="hyprland"
   DESKTOP=$Desktop
 }
 
