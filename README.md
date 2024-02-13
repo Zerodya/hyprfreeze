@@ -1,6 +1,6 @@
 # hyprfreeze
 [![basher install](https://www.basher.it/assets/logo/basher_install.svg)](https://www.basher.it/package/)
-Hyprfreeze is a utility to suspend a game process (and other programs) on Wayland
+Hyprfreeze is a utility to suspend a game process (and other programs) in Hyprland and Sway.
 
 https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f58d4f65926a
 
