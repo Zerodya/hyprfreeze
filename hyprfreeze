@@ -47,10 +47,10 @@ function toggleFreeze() {
   # Suspend or resume processes
   if [[ "$(ps -o state= "$PID")" == T ]]; then
     debugPrint "Resuming processes..."
-    kill -CONT "$PIDS" 2>/dev/null && echo "Resumed $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
+    kill -CONT $PIDS 2>/dev/null && echo "Resumed $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
   else
     debugPrint "Suspending processes..."
-    kill -STOP "$PIDS" 2>/dev/null && echo "Suspended $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
+    kill -STOP $PIDS 2>/dev/null && echo "Suspended $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
   fi
 }
 
