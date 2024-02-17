@@ -26,18 +26,15 @@ Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-g
 ### Manual
 Clone this repo and symlink the `hyprfreeze` script to a directory in your `PATH`:
 ```bash
-$ git clone https://github.com/Zerodya/hyprfreeze.git Hyprfreeze
-$ ln -s $(pwd)/Hyprfreeze/hyprfreeze $HOME/.local/bin
-$ chmod +x Hyprfreeze/hyprfreeze
+git clone https://github.com/Zerodya/hyprfreeze.git Hyprfreeze
+ln -s $(pwd)/Hyprfreeze/hyprfreeze $HOME/.local/bin
 ```
 
 ## Usage
 Add a bind in your Hyprland config to pause the current active window:
-```
+```bash
 # ~/.config/hypr/hyprland.conf
-
 ...
-
 # Toggle freeze on active window
 bind = , PAUSE, exec, hyprfreeze -a
 ```
@@ -57,11 +54,11 @@ bind = , PAUSE, exec, hyprfreeze -a
 --debug               enable debug mode
 ```
 ### Examples:
-```
+```bash
 # Pause game by process name
 hyprfreeze -n eldenring.exe
 ```
-```
+```bash
 # Get info about a process by clicking on its window, without suspending it
 hyprfreeze -r --info --dry-run
 ```
