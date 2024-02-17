@@ -135,14 +135,11 @@ function detectEnvironment() {
     debugPrint "Could not determine desktop environment via \`loginctl\`, and `$XDG_DESKTOP_SESSION` is not set. Assuming Hyprland."
     DESKTOP="hyprland"
   fi
+
+  debugPrint "Desktop: $DESKTOP"
 }
 
 function printInfo() {
-  debugPrint "Printing environment info..."
-  echo -e "$(tput bold)Session type:$(tput sgr0) $SESSION"
-  echo -e "$(tput bold)Desktop:$(tput sgr0) $DESKTOP"
-  echo ""
-
   debugPrint "Printing process info..."
   echo -e "$(tput bold)Process tree:$(tput sgr0)"
   ps -p "$PID" 2>/dev/null && pstree -p "$PID"
