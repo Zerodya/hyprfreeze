@@ -1,7 +1,6 @@
 # hyprfreeze
 [![basher install](https://www.basher.it/assets/logo/basher_install.svg)](https://www.basher.it/package/)
-Hyprfreeze is a utility to suspend a game process (and other programs) in
-Hyprland.
+Hyprfreeze is a utility to suspend a game process (and other programs) in Hyprland and Sway.
 
 https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f58d4f65926a
 
@@ -17,11 +16,11 @@ https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f5
 Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-git).
 
 ### Dependencies
-- `hyprland` to get the pid of the active window with hyprctl
+- a compatible window manager (`hyprland` or `sway`) to get the PID of the active window
 - `jq` to parse json
 - `psmisc` contains 'pstree' which is required to list child processes
   ### Optional
-- [`hyprprop`](https://github.com/vilari-mickopf/hyprprop) to get the pid of a window by selecting it with your mouse
+- [`hyprprop`](https://github.com/vilari-mickopf/hyprprop) or [`swayprop`](https://git.alternerd.tv/alterNERDtive/swayprop) to get the pid of a window by selecting it with your mouse
   ### Highly Recommended
 - [`gamescope`](https://github.com/ValveSoftware/gamescope) fixes mouse input not working in other XWayland windows after pausing a Wine game. It's also the superior way to game in Wayland anyway.
 
@@ -39,7 +38,7 @@ ln -s $(pwd)/Hyprfreeze/hyprfreeze $HOME/.local/bin
 ```
 
 ## Usage
-Add a bind in your Hyprland config to pause the current active window:
+Add a bind in your Hyprland or Sway config to pause the current active window:
 ```bash
 # ~/.config/hypr/hyprland.conf
 ...
@@ -53,7 +52,7 @@ bind = , PAUSE, exec, hyprfreeze -a
 -a, --active          toggle suspend by active window
 -p, --pid             toggle suspend by process id
 -n, --name            toggle suspend by process name/command
--r, --prop            toggle suspend by clicking on window (hyprprop must be installed)
+-r, --prop            toggle suspend by clicking on window (hyprprop/swayprop must be installed)
 
 -s, --silent          don't send notification
 -t, --notif-timeout   notification timeout in milliseconds (default 5000)

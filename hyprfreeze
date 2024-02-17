@@ -12,7 +12,7 @@ Options:
   -a, --active          toggle suspend by active window
   -p, --pid             toggle suspend by process id
   -n, --name            toggle suspend by process name/command
-  -r, --prop            toggle suspend by clicking on window (hyprprop must be installed)
+  -r, --prop            toggle suspend by clicking on window (hyprprop/swayprop must be installed)
 
   -s, --silent          don't send notification
   -t, --notif-timeout   notification timeout in milliseconds (default 5000)
@@ -56,7 +56,14 @@ function toggleFreeze() {
 
 function getPidByActive() {
   debugPrint "Getting PID by active window..."
-  PID=$(hyprctl activewindow -j | jq '.pid')
+  if [[ "hyprland" == "$DESKTOP" ]]; then
+    PID=$(hyprctl activewindow -j | jq '.pid')
+  elif [[ "sway" == "$DESKTOP" ]]; then
+    PID=$(swaymsg -t get_tree | jq '.. | select(.type?) | select(.focused==true) | .pid')
+  else
+    echo "Detecting the active window is currently not supported on $DESKTOP."
+    exit 1
+  fi
   debugPrint "PID by active window: $PID"
 
   # Die if PID is not numeric (e.g. "null" if there is no active window)
@@ -92,17 +99,48 @@ function getPidByName() {
 
 function getPidByProp() {
   debugPrint "Getting PID by prop..."
-  if ! command -v hyprprop; then
-    echo "You need to install 'hyprprop' to use this feature. (https://github.com/vilari-mickopf/hyprprop)"
+  if [[ "hyprland" == "$DESKTOP" ]]; then
+    if ! [ $(command -v hyprprop) ]; then
+      echo "You need to install 'hyprprop' to use this feature. (https://github.com/vilari-mickopf/hyprprop)"
+      exit 1
+    fi
+
+    PID=$(hyprprop | jq '.pid')
+  elif [[ "sway" == "$DESKTOP" ]]; then
+    if ! [ $(command -v swayprop) ]; then
+      echo "You need to install 'swayprop' to use this feature. (https://git.alternerd.tv/alterNERDtive/swayprop)"
+      exit 1
+    fi
+
+    PID=$(swayprop | jq '.pid')
+  else
+    echo "Selecting the target window by mouse is currently not supported on $DESKTOP."
     exit 1
   fi
-
-  PID=$(hyprprop | jq '.pid')
   debugPrint "PID by prop: $PID"
 }
 
+function detectEnvironment() {
+  if [ $(command -v loginctl) ]; then
+    local Desktop
+    eval "$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Desktop)"
+    DESKTOP=$Desktop
+  fi
+
+  if [ -z "$DESKTOP" ]; then
+    DESKTOP=$XDG_SESSION_DESKTOP
+  fi
+
+  if [ -z "$DESKTOP" ]; then
+    debugPrint "Could not determine desktop environment via \`loginctl\`, and `$XDG_DESKTOP_SESSION` is not set. Assuming Hyprland."
+    DESKTOP="hyprland"
+  fi
+
+  debugPrint "Desktop: $DESKTOP"
+}
+
 function printInfo() {
-  debugPrint "Printing process info...\n"
+  debugPrint "Printing process info..."
   echo -e "$(tput bold)Process tree:$(tput sgr0)"
   ps -p "$PID" 2>/dev/null && pstree -p "$PID"
 
@@ -225,5 +263,7 @@ DRYRUN=0
 DEBUG=0
 
 args "$@"
+
+detectEnvironment
 
 main
