@@ -132,7 +132,7 @@ function detectEnvironment() {
   fi
 
   if [ -z "$DESKTOP" ]; then
-    debugPrint "Could not determine desktop environment via \`loginctl\`, and `$XDG_DESKTOP_SESSION` is not set. Assuming Hyprland."
+    debugPrint "Could not determine desktop environment via \`loginctl\`, and XDG_SESSION_DESKTOP is not set. Assuming Hyprland."
     DESKTOP="hyprland"
   fi
 
