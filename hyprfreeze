@@ -136,6 +136,9 @@ function detectEnvironment() {
     DESKTOP="hyprland"
   fi
 
+  # Enforce lowercase for consistent matching
+  DESKTOP="${DESKTOP,,}"
+
   debugPrint "Desktop: $DESKTOP"
 }
 
