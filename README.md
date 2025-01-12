@@ -1,5 +1,6 @@
 # hyprfreeze
 [![basher install](https://www.basher.it/assets/logo/basher_install.svg)](https://www.basher.it/package/)
+
 Hyprfreeze is a utility to suspend a game process (and other programs) in Hyprland and Sway.
 
 https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f58d4f65926a
@@ -9,11 +10,13 @@ https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f5
 - Pause cutscenes to read the subtitles or if you suddenly need to leave your desk
 - Save system resources (excluding RAM) if you need them for another computer task, or if the game's pause menu uses too many
 
-**Note:** Running games in [**gamescope**](https://github.com/ValveSoftware/gamescope) is highly recommended. (See [#1](https://github.com/Zerodya/hyprfreeze/issues/1))
+> **Note:** This repo is in **maintenance-only** mode as it is feature-complete for my scope.
+> - For Hyprland: I use this tool in Hyprland everyday and will update it to fix potential bugs or when `hyprctl` changes its syntax. 
+> - For Sway: it's not my first priority as I don't daily drive it, so if it stops working there please open a new issue as I will not be aware of it.
 
 ## Installation
 ### Arch Linux
-Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-git).
+Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-git). (However check issue [#12](https://github.com/Zerodya/hyprfreeze/issues/12))
 
 ### Dependencies
 - a compatible window manager (`hyprland` or `sway`) to get the PID of the active window
@@ -22,7 +25,7 @@ Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-g
   ### Optional
 - [`hyprprop`](https://github.com/vilari-mickopf/hyprprop) or [`swayprop`](https://git.alternerd.tv/alterNERDtive/swayprop) to get the pid of a window by selecting it with your mouse
   ### Highly Recommended
-- [`gamescope`](https://github.com/ValveSoftware/gamescope) fixes mouse input not working in other XWayland windows after pausing a Wine game. It's also the superior way to game in Wayland anyway.
+- Running games in [`gamescope`](https://github.com/ValveSoftware/gamescope) fixes mouse input not working in other XWayland windows after pausing a Wine game (see [#1](https://github.com/Zerodya/hyprfreeze/issues/1)). It's also the superior way to game in Wayland anyway.
 
 ### Basher
 Hyprfreeze is compatible with shell script package manager [Basher](https://basher.it).
