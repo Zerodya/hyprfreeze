@@ -16,7 +16,7 @@ https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f5
 
 ## Installation
 ### Arch Linux
-Hyprfreeze is available in [AUR](https://aur.archlinux.org/packages/hyprfreeze-git). (However check issue [#12](https://github.com/Zerodya/hyprfreeze/issues/12))
+Hyprfreeze is available in the [AUR](https://aur.archlinux.org/packages/hyprfreeze-git). (Maintained by Aethar)
 
 ### Dependencies
 - a compatible window manager (`hyprland` or `sway`) to get the PID of the active window
