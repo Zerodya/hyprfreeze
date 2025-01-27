@@ -249,6 +249,13 @@ function main() {
     getPidByProp
   fi
 
+  # Focus urgent or last window if active window is xwayland (workaround for #1)
+  if [[ "hyprland" == "$DESKTOP" ]]; then
+    if [[ `hyprctl clients -j | jq -r ".[] | select(.pid == \"$PID\") .xwayland"` == "true" && `hyprctl activewindow -j | jq -r ".pid"` == "$PID" ]]; then
+      hyprctl dispatch focusurgentorlast
+    fi
+  fi
+
   # Suspend or resume process
   toggleFreeze
 
