@@ -139,6 +139,11 @@ function detectEnvironment() {
   # Enforce lowercase for consistent matching
   DESKTOP="${DESKTOP,,}"
 
+  # Normalize UWSM desktop names
+  if [[ "$DESKTOP" == *-uwsm ]]; then
+    DESKTOP="${DESKTOP%-uwsm}"
+  fi
+
   debugPrint "Desktop: $DESKTOP"
 }
 
