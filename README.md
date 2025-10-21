@@ -9,7 +9,7 @@ https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f5
 - Pause cutscenes to read the subtitles or if you suddenly need to leave your desk
 - Save system resources (excluding RAM) if you need them for another computer task, or if the game's pause menu uses too many
 
-> **Note:** This repo is in **maintenance-only** mode as it is feature-complete for my scope. I use this tool in Hyprland everyday and will update it to fix potential bugs or when `hyprctl` changes its syntax.
+> **Note:** This repo is feature-complete so it will not receive frequent updates. I still use this tool everyday and will update it to fix potential bugs or if `hyprctl` changes its syntax.
 
 ## Dependencies
 - `hyprland` to get the PID of the active window
@@ -40,7 +40,7 @@ sudo ln -s $(pwd)/completions/zsh/_hyprfreeze /usr/share/zsh/site-functions/
 ```
 **Fish:**
 ```bash
-sudo ln -s $(pwd)/completions/fish/hyprfreeze.fish /usr/share/fish/vendor_completions.d/
+sudo ln -s $(pwd)/completions/fish/hyprfreeze.fish /usr/share/fish/completions/
 ```
 ## Usage
 Add a bind in your Hyprland config to pause the current active window:
@@ -76,7 +76,7 @@ hyprfreeze -n eldenring.exe
 - System audio may stop when pausing Linux native games (no Proton/Wine) like Minecraft. This is a Pipewire [issue](https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/3509). 
 To fix it, run the game with the env variable: `ALSOFT_DRIVERS=pulse`
 
-- Pausing XWayland games (no Gamescope or Wayland proton) may stop the mouse from working in other XWayland apps like Discord. A workaround has been implemented that quickly switches workspaces to release the mouse capture before pausing the window.
+- Pausing XWayland games (no Gamescope or Proton Wayland) may stop the mouse from working in other XWayland apps like Discord. A workaround has been implemented that quickly switches workspaces to release the mouse capture before pausing the window.
 
 ## Disclaimer
 There is always the risk, although slim, that an application may crash.
