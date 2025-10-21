@@ -51,11 +51,13 @@ function releaseMouseCapture() {
     debugPrint "XWayland window detected - using workspace switching to release mouse capture..."
     
     # Get the current workspace
-    local current_ws=$(hyprctl activeworkspace -j | jq -r '.id')
+    local current_ws
+    current_ws=$(hyprctl activeworkspace -j | jq -r '.id')
     debugPrint "Current workspace: $current_ws"
     
     # Find another workspace to switch to briefly
-    local other_workspace=$(hyprctl workspaces -j | jq -r '.[] | select(.id != '"$current_ws"') | .id' | head -1)
+    local other_workspace
+    other_workspace=$(hyprctl workspaces -j | jq -r '.[] | select(.id != '"$current_ws"') | .id' | head -1)
     
     if [ -n "$other_workspace" ]; then
       debugPrint "Switching to workspace $other_workspace and back to release mouse capture..."
@@ -74,6 +76,7 @@ function toggleFreeze() {
   # Get pids of process tree
   PIDS=$(pstree -p "$PID" | grep -oP '\(\K[^\)]+')
 
+  # Format PIDs for display (comma-separated)
   PIDS_DISPLAY=$(echo "$PIDS" | tr '\n' ',' | sed 's/,$//')
   debugPrint "PIDs: $PIDS_DISPLAY"
 
@@ -87,12 +90,14 @@ function toggleFreeze() {
   # Suspend or resume processes
   if [[ "$(ps -o state= "$PID")" == T ]]; then
     debugPrint "Resuming processes..."
+    # shellcheck disable=SC2086
     kill -CONT $PIDS 2>/dev/null && echo "Resumed $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
   else
     # Before suspending, release mouse capture for XWayland windows
     releaseMouseCapture
     
     debugPrint "Suspending processes..."
+    # shellcheck disable=SC2086
     kill -STOP $PIDS 2>/dev/null && echo "Suspended $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
   fi
 }
@@ -135,7 +140,7 @@ function getPidByName() {
 
 function getPidByProp() {
   debugPrint "Getting PID by prop..."
-  if ! [ $(command -v hyprprop) ]; then
+  if ! command -v hyprprop >/dev/null; then
     echo "You need to install 'hyprprop' to use this feature. (https://github.com/vilari-mickopf/hyprprop)"
     exit 1
   fi
