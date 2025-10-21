@@ -28,6 +28,43 @@ function debugPrint() {
   fi
 }
 
+function releaseMouseCapture() {
+  debugPrint "Attempting to release mouse capture for XWayland..."
+  
+  # Get the active window info
+  local active_win
+  if [[ "hyprland" == "$DESKTOP" ]]; then
+    active_win=$(hyprctl activewindow -j)
+  fi
+  
+  # Check if the window we're about to pause is XWayland
+  local is_xwayland
+  if [[ "hyprland" == "$DESKTOP" ]]; then
+    is_xwayland=$(echo "$active_win" | jq -r '.xwayland')
+    debugPrint "Is XWayland window: $is_xwayland"
+  fi
+  
+  # If it's an XWayland window, use workspace switching to release mouse capture
+  if [[ "$is_xwayland" == "true" ]] && [[ "hyprland" == "$DESKTOP" ]]; then
+    debugPrint "XWayland window detected - using workspace switching to release mouse capture..."
+    
+    # Get the current workspace
+    local current_ws=$(hyprctl activeworkspace -j | jq -r '.id')
+    debugPrint "Current workspace: $current_ws"
+    
+    # Find another workspace to switch to briefly
+    local other_workspace=$(hyprctl workspaces -j | jq -r '.[] | select(.id != '"$current_ws"') | .id' | head -1)
+    
+    if [ -n "$other_workspace" ]; then
+      debugPrint "Switching to workspace $other_workspace and back to release mouse capture..."
+      hyprctl dispatch workspace "$other_workspace"
+      hyprctl dispatch workspace "$current_ws"
+    else
+      debugPrint "No other workspace found, cannot release mouse capture via workspace switching"
+    fi
+  fi
+}
+
 function toggleFreeze() {
   # Skip this function if --dry-run flag was provided
   if [[ $DRYRUN == "1" ]]; then return 0; fi
@@ -49,6 +86,9 @@ function toggleFreeze() {
     debugPrint "Resuming processes..."
     kill -CONT $PIDS 2>/dev/null && echo "Resumed $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
   else
+    # Before suspending, release mouse capture for XWayland windows
+    releaseMouseCapture
+    
     debugPrint "Suspending processes..."
     kill -STOP $PIDS 2>/dev/null && echo "Suspended $(ps -p "$PID" -o comm= 2>/dev/null) (PID $PID)" || exit 1
   fi
