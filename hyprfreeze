@@ -16,8 +16,7 @@ Options:
 
   -s, --silent          don't send notification
   -t, --notif-timeout   notification timeout in milliseconds (default 5000)
-  --info                show information about the process
-  --dry-run             doesn't actually suspend/resume a process, useful with --info
+  --dry-run             doesn't actually suspend/resume a process
   --debug               enable debug mode
   --no-xorg-workaround  skip the XWayland mouse capture workaround (other XWayland windows may become non-interactable)
 EOF
@@ -144,19 +143,6 @@ function getPidByProp() {
   debugPrint "PID by prop: $PID"
 }
 
-function printInfo() {
-  debugPrint "Printing process info..."
-  echo -e "$(tput bold)Process tree:$(tput sgr0)"
-  ps -p "$PID" 2>/dev/null && pstree -p "$PID"
-
-  echo -e "\n$(tput bold)Process threads:$(tput sgr0)"
-  ps -eLo pid,tid,comm | grep "$PID" 2>/dev/null
-
-  echo -e "\n$(tput bold)Process ID$(tput sgr0) = $PID \
-    \n$(tput bold)Process name$(tput sgr0) = $(ps -p "$PID" -o comm= 2>/dev/null) \
-    \n$(tput bold)Process state$(tput sgr0) = $(ps -o state= -p "$PID" 2>/dev/null)\n"
-}
-
 function sendNotification() {
   debugPrint "Sending notification..."
   local title
@@ -175,7 +161,7 @@ function args() {
 
   # Parse options
   local options="hap:n:rst:"
-  local long_options="help,active,pid:,name:,prop,silent,notif-timeout:,info,dry-run,debug,no-xorg-workaround"
+  local long_options="help,active,pid:,name:,prop,silent,notif-timeout:,dry-run,debug,no-xorg-workaround"
   local parsed_args
   parsed_args=$(getopt -o "$options" --long "$long_options" -n "$(basename "$0")" -- "$@")
 
@@ -210,9 +196,6 @@ function args() {
       -t | --notif-timeout)
         shift
         NOTIF_TIMEOUT="$1"
-        ;;
-      --info)
-        INFO=1
         ;;
       --dry-run)
         DRYRUN=1
@@ -257,8 +240,7 @@ function main() {
   # Suspend or resume process
   toggleFreeze
 
-  # Run these functions after PID is obtained
-  if [ $INFO -eq 1 ]; then printInfo; fi
+  # Send notification if not silent
   if [ $SILENT -ne 1 ]; then sendNotification; fi
 
   debugPrint "End of main function."
@@ -266,7 +248,6 @@ function main() {
 
 SILENT=0
 NOTIF_TIMEOUT=5000
-INFO=0
 DRYRUN=0
 DEBUG=0
 NO_XORG_WORKAROUND=0
