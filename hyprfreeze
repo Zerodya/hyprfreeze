@@ -74,7 +74,8 @@ function toggleFreeze() {
   # Get pids of process tree
   PIDS=$(pstree -p "$PID" | grep -oP '\(\K[^\)]+')
 
-  debugPrint "PIDs: $PIDS"
+  PIDS_DISPLAY=$(echo "$PIDS" | tr '\n' ',' | sed 's/,$//')
+  debugPrint "PIDs: $PIDS_DISPLAY"
 
   # Prevent suspending itself
   local pid_of_script=$$
