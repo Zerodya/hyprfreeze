@@ -28,7 +28,20 @@ Clone this repo and symlink the `hyprfreeze` script to a directory in your `PATH
 git clone https://github.com/Zerodya/hyprfreeze.git Hyprfreeze
 ln -s $(pwd)/Hyprfreeze/hyprfreeze $HOME/.local/bin
 ```
+Then install completions for your shell:
 
+**Bash:**
+```bash
+sudo ln -s $(pwd)/completions/bash/hyprfreeze /usr/share/bash-completion/completions/
+```
+**Zsh:**
+```bash
+sudo ln -s $(pwd)/completions/zsh/_hyprfreeze /usr/share/zsh/site-functions/
+```
+**Fish:**
+```bash
+sudo ln -s $(pwd)/completions/fish/hyprfreeze.fish /usr/share/fish/vendor_completions.d/
+```
 ## Usage
 Add a bind in your Hyprland config to pause the current active window:
 ```bash

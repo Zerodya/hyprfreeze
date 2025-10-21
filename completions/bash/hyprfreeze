@@ -1,0 +1,33 @@
+_hyprfreeze()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    case $prev in
+        -p|--pid)
+            # Complete with running PIDs
+            COMPREPLY=($(compgen -W "$(ps -e --no-headers -o pid | tr '\n' ' ')" -- "$cur"))
+            return
+            ;;
+        -n|--name)
+            # Complete with process names
+            COMPREPLY=($(compgen -W "$(ps -e --no-headers -o comm | sort -u | tr '\n' ' ')" -- "$cur"))
+            return
+            ;;
+        -t|--notif-timeout)
+            # Complete with common timeout values
+            COMPREPLY=($(compgen -W "1000 2000 3000 5000 10000" -- "$cur"))
+            return
+            ;;
+    esac
+
+    if [[ $cur == -* ]]; then
+        COMPREPLY=($(compgen -W "-h --help -a --active -p --pid -n --name -r --prop \
+            -s --silent -t --notif-timeout --dry-run --debug --no-xorg-workaround" -- "$cur"))
+    else
+        # When no option is specified, complete with options
+        COMPREPLY=($(compgen -W "-a -p -n -r" -- "$cur"))
+    fi
+}
+
+complete -F _hyprfreeze hyprfreeze
