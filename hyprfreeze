@@ -19,6 +19,7 @@ Options:
   --info                show information about the process
   --dry-run             doesn't actually suspend/resume a process, useful with --info
   --debug               enable debug mode
+  --no-xorg-workaround  skip the XWayland mouse capture workaround (other XWayland windows may become non-interactable)
 EOF
 }
 
@@ -29,6 +30,12 @@ function debugPrint() {
 }
 
 function releaseMouseCapture() {
+  # Skip if workaround is disabled
+  if [[ $NO_XORG_WORKAROUND == "1" ]]; then
+    debugPrint "XWayland workaround disabled, skipping mouse capture release"
+    return 0
+  fi
+  
   debugPrint "Attempting to release mouse capture for XWayland..."
   
   # Get the active window info
@@ -218,7 +225,7 @@ function args() {
 
   # Parse options
   local options="hap:n:rst:"
-  local long_options="help,active,pid:,name:,prop,silent,notif-timeout:,info,dry-run,debug"
+  local long_options="help,active,pid:,name:,prop,silent,notif-timeout:,info,dry-run,debug,no-xorg-workaround"
   local parsed_args
   parsed_args=$(getopt -o "$options" --long "$long_options" -n "$(basename "$0")" -- "$@")
 
@@ -262,6 +269,9 @@ function args() {
         ;;
       --debug)
         DEBUG=1
+        ;;
+      --no-xorg-workaround)
+        NO_XORG_WORKAROUND=1
         ;;
       --)
         shift # Skip -- argument
@@ -309,6 +319,7 @@ NOTIF_TIMEOUT=5000
 INFO=0
 DRYRUN=0
 DEBUG=0
+NO_XORG_WORKAROUND=0
 
 args "$@"
 
