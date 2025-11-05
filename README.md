@@ -22,6 +22,9 @@ https://github.com/Zerodya/hyprfreeze/assets/73220426/541318e2-441a-485a-91c5-f5
 ### Arch Linux
 Hyprfreeze is available in the [AUR](https://aur.archlinux.org/packages/hyprfreeze-git). (Maintained by [Aethar](https://github.com/Aethar01))
 
+### NixOS
+Hyprfreeze is available in [nixpkgs](https://search.nixos.org/packages?channel=unstable&query=hyprfreeze).
+
 ### Manual
 Clone this repo and symlink the `hyprfreeze` script to a directory in your `PATH`:
 ```bash
